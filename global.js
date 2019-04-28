@@ -1,11 +1,11 @@
 
-
 /**
+ * model:请求模式：get/post 
  * reqData:请求参数 json对象
  * url：请求地址
  * callback:回调函数，参数1 错误时返回，参数2,请求成功时返回
  */
-global.ajax = (reqData, url,callback) => {
+global.ajax = ( model,reqData, url,callback) => {
     var xhr = null;
     if (window.XMLHttpRequest) {
       xhr = new XMLHttpRequest();
@@ -18,7 +18,7 @@ global.ajax = (reqData, url,callback) => {
       oData.append(key, reqData[key])
     }
     // 2. 设置请求参数。
-    xhr.open("post", url, true);
+    xhr.open(model, url, true);
     //  3. 将请求提交给服务器
     xhr.send(oData);
     // 4. 等待服务器响应。
@@ -31,7 +31,12 @@ global.ajax = (reqData, url,callback) => {
         }
         
       } else if (4 == xhr.readyState) {
-        callback(xhr.status,JSON.parse(xhr.responseText))
+        try{  
+          callback(xhr.status,JSON.parse(xhr.responseText))
+        }catch(error){
+          callback(xhr.status,xhr.responseText)
+        }
+        
       }
     }
   }
